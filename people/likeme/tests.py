@@ -57,5 +57,5 @@ class LikeMeIndexTests(TestCase):
         response = self.client.get(reverse('likeme:index'), {"experienced": True})
         self.assertIs(response.status_code, 200)
         self.assertIs(type(response), JsonResponse)
-        self.assertJSONEqual(str(response.content, encoding='utf8'), topDefault)
+        self.assertJSONNotEqual(str(response.content, encoding='utf8'), topDefault)
 
