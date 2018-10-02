@@ -8,4 +8,7 @@ def byName(df, name):
     df['score'] += name_scores
 
 def eudlidianDistance(df, latitude, longitude):
-    
+   return df 
+
+def topTen(df):
+    return df.sort_values(by='score', ascending=False).head(10).to_dict('records')

@@ -1,9 +1,13 @@
 from django.test import TestCase
 from django.urls import reverse
 from django.http import JsonResponse
+from .views import getDataFrame
+from .transform import topTen
 
 # Create your tests here.
 
+df = getDataFrame()
+topDefault = {'peopleLikeYou': topTen(df)}
 
 class LikeMeIndexTests(TestCase):
 
@@ -11,47 +15,47 @@ class LikeMeIndexTests(TestCase):
         response = self.client.get(reverse('likeme:index'))
         self.assertIs(response.status_code, 200)
         self.assertIs(type(response), JsonResponse)
-        self.assertJSONEqual(str(response.content, encoding='utf8'), {"peopleLikeYou": []})
+        self.assertJSONEqual(str(response.content, encoding='utf8'), topDefault)
 
     def test_should_query_by_name(self):
         response = self.client.get(reverse('likeme:index'), {"name": "Kendra"})
         self.assertIs(response.status_code, 200)
         self.assertIs(type(response), JsonResponse)
-        self.assertJSONEqual(str(response.content, encoding='utf8'), {"peopleLikeYou": []})
+        self.assertJSONNotEqual(str(response.content, encoding='utf8'), topDefault)
 
     def test_should_query_by_age(self):
         response = self.client.get(reverse('likeme:index'), {"age": 30})
         self.assertIs(response.status_code, 200)
         self.assertIs(type(response), JsonResponse)
-        self.assertJSONEqual(str(response.content, encoding='utf8'), {"peopleLikeYou": []})
+        self.assertJSONEqual(str(response.content, encoding='utf8'), topDefault)
 
     def test_should_query_by_latitude(self):
         response = self.client.get(reverse('likeme:index'), {"latitude": 40.71667})
         self.assertIs(response.status_code, 200)
         self.assertIs(type(response), JsonResponse)
-        self.assertJSONEqual(str(response.content, encoding='utf8'), {"peopleLikeYou": []})
+        self.assertJSONEqual(str(response.content, encoding='utf8'), topDefault)
 
     def test_should_query_by_longitude(self):
         response = self.client.get(reverse('likeme:index'), {"longitude": 40.71667})
         self.assertIs(response.status_code, 200)
         self.assertIs(type(response), JsonResponse)
-        self.assertJSONEqual(str(response.content, encoding='utf8'), {"peopleLikeYou": []})
+        self.assertJSONEqual(str(response.content, encoding='utf8'), topDefault)
 
     def test_should_query_by_location(self):
         response = self.client.get(reverse('likeme:index'), {"longitude": 40.71667, "latitude": 40.71667})
         self.assertIs(response.status_code, 200)
         self.assertIs(type(response), JsonResponse)
-        self.assertJSONEqual(str(response.content, encoding='utf8'), {"peopleLikeYou": []})
+        self.assertJSONEqual(str(response.content, encoding='utf8'), topDefault)
 
     def test_should_query_by_monthly_income(self):
         response = self.client.get(reverse('likeme:index'), {"monthly income": 5132})
         self.assertIs(response.status_code, 200)
         self.assertIs(type(response), JsonResponse)
-        self.assertJSONEqual(str(response.content, encoding='utf8'), {"peopleLikeYou": []})
+        self.assertJSONEqual(str(response.content, encoding='utf8'), topDefault)
 
     def test_should_query_by_experienced(self):
         response = self.client.get(reverse('likeme:index'), {"experienced": True})
         self.assertIs(response.status_code, 200)
         self.assertIs(type(response), JsonResponse)
-        self.assertJSONEqual(str(response.content, encoding='utf8'), {"peopleLikeYou": []})
+        self.assertJSONEqual(str(response.content, encoding='utf8'), topDefault)
 
