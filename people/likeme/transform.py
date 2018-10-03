@@ -1,4 +1,6 @@
-import re
+import numpy as np
+import pandas as pd
+from numpy.linalg import norm
 from similarity.normalized_levenshtein import NormalizedLevenshtein
 normalized_levenshtein = NormalizedLevenshtein()
 
@@ -18,8 +20,20 @@ def byExperience(df, experience):
     exp_score = df['experienced'].map(makeScore) 
     df['score'] += exp_score
 
-def eudlidianDistance(df, latitude, longitude):
+def byEudlidianDistance(df, latitude, longitude):
+   "to normalize for all distances 1 - distance / max distance"
+   searchLocation = pd.Series({'latitude': float(latitude), 'longitude': float(longitude)})
+   # distances =np.linalg.norm()
+   # np.linalg.norm
    return df 
 
+def bySingleLocation(df, locationType, value):
+    distances = np.square(df[locationType] - float(value))
+    maxDistance = np.max(distances)
+    normalized = 1 - distances / maxDistance
+    print(normalized)
+    df['score'] += normalized
+
 def topTen(df):
+    "pagination query"
     return df.sort_values(by='score', ascending=False).head(10).to_dict('records')
