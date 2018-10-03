@@ -19,16 +19,24 @@ class LikeMeIndexTests(TestCase):
         self.assertJSONEqual(str(response.content, encoding='utf8'), topDefault)
 
     def test_should_query_by_name(self):
-        response = self.client.get(reverse('likeme:index'), {"name": "Kendra"})
+        name = "Kendra"
+        response = self.client.get(reverse('likeme:index'), {"name": name})
         self.assertIs(response.status_code, 200)
         self.assertIs(type(response), JsonResponse)
         self.assertJSONNotEqual(str(response.content, encoding='utf8'), topDefault)
+        json = response.json()['peopleLikeYou']
+        actualName = json[0]['name']
+        self.assertEqual(name, actualName) 
 
     def test_should_query_by_age(self):
-        response = self.client.get(reverse('likeme:index'), {"age": 30})
+        age = 30
+        response = self.client.get(reverse('likeme:index'), {"age": age})
         self.assertIs(response.status_code, 200)
         self.assertIs(type(response), JsonResponse)
         self.assertJSONNotEqual(str(response.content, encoding='utf8'), topDefault)
+        json = response.json()['peopleLikeYou']
+        actualAge = json[0]['age']
+        self.assertEqual(age, actualAge) 
 
     def test_should_query_by_latitude(self):
         latitude = 40.71667
@@ -64,10 +72,14 @@ class LikeMeIndexTests(TestCase):
         self.assertEqual(latitude, actualLatitude, 'asserted that latitudes would match') 
 
     def test_should_query_by_monthly_income(self):
-        response = self.client.get(reverse('likeme:index'), {"monthly income": 5132})
+        income = 5132
+        response = self.client.get(reverse('likeme:index'), {"monthly income": income})
         self.assertIs(response.status_code, 200)
         self.assertIs(type(response), JsonResponse)
         self.assertJSONNotEqual(str(response.content, encoding='utf8'), topDefault)
+        json = response.json()['peopleLikeYou']
+        actualIncome = json[0]['monthly income']
+        self.assertEqual(income, actualIncome,'asserted incomes would match')
 
     def test_should_query_by_experienced_True(self):
         response = self.client.get(reverse('likeme:index'), {"experienced": True})
@@ -81,5 +93,24 @@ class LikeMeIndexTests(TestCase):
         self.assertIs(type(response), JsonResponse)
         self.assertJSONNotEqual(str(response.content, encoding='utf8'), topDefault)
 
-# TODO add validation checks for each function
+    def test_should_query_on_three_fields(self):
+        # Branden,67,-7.1765737,111.3828738,4681,false
+        age = 67
+        latitude = -7.1765737
+        longitude = 111.3828738
+        query = {
+           'age': age,
+           'latitude': latitude,
+           'longitude': longitude
+        }
+        response = self.client.get(reverse('likeme:index'), query)
+        self.assertJSONNotEqual(str(response.content, encoding='utf8'), topDefault)
+        json = response.json()['peopleLikeYou']
+        actualLongitude = json[0]['longitude']
+        self.assertEqual(isclose(longitude, actualLongitude),True,'asserted longitudes would match')
+        actualLatitude = json[0]['latitude']
+        self.assertEqual(isclose(latitude, actualLatitude),True, 'asserted that latitudes would match') 
+        actualAge = json[0]['age']
+        self.assertEqual(age, actualAge) 
+
 
