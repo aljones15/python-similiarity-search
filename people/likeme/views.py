@@ -64,9 +64,9 @@ def index(request):
         return response
 
     except:
+        "this should be logged here but do not have a logger"
         e = sys.exc_info()[0]
-        raise e
-        response = JsonResponse({'error': 'Unknown: ' + e.message})
+        response = JsonResponse({'error': 'Unknown Error'})
         response.status_code = 400;
         return response
 
