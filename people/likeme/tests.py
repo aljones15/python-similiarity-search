@@ -86,12 +86,18 @@ class LikeMeIndexTests(TestCase):
         self.assertIs(response.status_code, 200)
         self.assertIs(type(response), JsonResponse)
         self.assertJSONNotEqual(str(response.content, encoding='utf8'), topDefault)
+        json = response.json()['peopleLikeYou']
+        actualExp = json[0]['experienced']
+        self.assertEqual(True, actualExp)
 
     def test_should_query_by_experienced_False(self):
         response = self.client.get(reverse('likeme:index'), {"experienced": False})
         self.assertIs(response.status_code, 200)
         self.assertIs(type(response), JsonResponse)
         self.assertJSONNotEqual(str(response.content, encoding='utf8'), topDefault)
+        json = response.json()['peopleLikeYou']
+        actualExp = json[0]['experienced']
+        self.assertEqual(False, actualExp)
 
     def test_should_query_on_three_fields(self):
         # Branden,67,-7.1765737,111.3828738,4681,false
@@ -180,6 +186,40 @@ class LikeMeIndexTests(TestCase):
            'longitude': longitude,
            'income': income,
            'experienced': experienced
+        }
+        response = self.client.get(reverse('likeme:index'), query)
+        self.assertJSONNotEqual(str(response.content, encoding='utf8'), topDefault)
+        json = response.json()['peopleLikeYou']
+        actualLongitude = json[0]['longitude']
+        self.assertEqual(isclose(longitude, actualLongitude),True,'asserted longitudes would match')
+        actualLatitude = json[0]['latitude']
+        self.assertEqual(isclose(latitude, actualLatitude),True, 'asserted that latitudes would match') 
+        actualAge = json[0]['age']
+        self.assertEqual(age, actualAge) 
+        actualIncome = json[0]['monthly income']
+        self.assertEqual(income, actualIncome) 
+        actualName = json[0]['name']
+        self.assertEqual(name, actualName)
+        actualExp = json[0]['experienced']
+        self.assertEqual(False, actualExp)
+
+    def test_should_ignore_extra_fields(self):
+        # Lexis,80,0.5128922,-77.2864879,3839,false
+        age = 80
+        latitude = 0.5128922
+        longitude = -77.2864879
+        income = 3839
+        name = "Lexis"
+        experienced = "false"
+        query = {
+           'name': name,
+           'age': age,
+           'latitude': latitude,
+           'longitude': longitude,
+           'income': income,
+           'experienced': experienced,
+           'extra': 'field',
+           'more': 'fields'
         }
         response = self.client.get(reverse('likeme:index'), query)
         self.assertJSONNotEqual(str(response.content, encoding='utf8'), topDefault)
