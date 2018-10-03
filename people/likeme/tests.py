@@ -3,12 +3,12 @@ from django.test import TestCase
 from django.urls import reverse
 from django.http import JsonResponse
 from .views import getDataFrame
-from .transform import topTen
+from .transform import top_ten
 
 # Create your tests here.
 
 df = getDataFrame()
-topDefault = {'peopleLikeYou': topTen(df)}
+top_default = {'peopleLikeYou': top_ten(df)}
 
 class LikeMeIndexTests(TestCase):
 
@@ -16,14 +16,14 @@ class LikeMeIndexTests(TestCase):
         response = self.client.get(reverse('likeme:index'))
         self.assertIs(response.status_code, 200)
         self.assertIs(type(response), JsonResponse)
-        self.assertJSONEqual(str(response.content, encoding='utf8'), topDefault)
+        self.assertJSONEqual(str(response.content, encoding='utf8'), top_default)
 
     def test_should_query_by_name(self):
         name = "Kendra"
         response = self.client.get(reverse('likeme:index'), {"name": name})
         self.assertIs(response.status_code, 200)
         self.assertIs(type(response), JsonResponse)
-        self.assertJSONNotEqual(str(response.content, encoding='utf8'), topDefault)
+        self.assertJSONNotEqual(str(response.content, encoding='utf8'), top_default)
         json = response.json()['peopleLikeYou']
         actualName = json[0]['name']
         self.assertEqual(name, actualName) 
@@ -33,7 +33,7 @@ class LikeMeIndexTests(TestCase):
         response = self.client.get(reverse('likeme:index'), {"age": age})
         self.assertIs(response.status_code, 200)
         self.assertIs(type(response), JsonResponse)
-        self.assertJSONNotEqual(str(response.content, encoding='utf8'), topDefault)
+        self.assertJSONNotEqual(str(response.content, encoding='utf8'), top_default)
         json = response.json()['peopleLikeYou']
         actualAge = json[0]['age']
         self.assertEqual(age, actualAge) 
@@ -43,7 +43,7 @@ class LikeMeIndexTests(TestCase):
         response = self.client.get(reverse('likeme:index'), {"latitude": latitude})
         self.assertIs(response.status_code, 200)
         self.assertIs(type(response), JsonResponse)
-        self.assertJSONNotEqual(str(response.content, encoding='utf8'), topDefault)
+        self.assertJSONNotEqual(str(response.content, encoding='utf8'), top_default)
         json = response.json()['peopleLikeYou']
         actualLatitude = json[0]['latitude']
         self.assertEqual(latitude, actualLatitude) 
@@ -53,7 +53,7 @@ class LikeMeIndexTests(TestCase):
         response = self.client.get(reverse('likeme:index'), {"longitude": longitude})
         self.assertIs(response.status_code, 200)
         self.assertIs(type(response), JsonResponse)
-        self.assertJSONNotEqual(str(response.content, encoding='utf8'), topDefault)
+        self.assertJSONNotEqual(str(response.content, encoding='utf8'), top_default)
         json = response.json()['peopleLikeYou']
         actualLongitude = json[0]['longitude']
         self.assertEqual(longitude, actualLongitude)
@@ -64,7 +64,7 @@ class LikeMeIndexTests(TestCase):
         response = self.client.get(reverse('likeme:index'), {"longitude": longitude, "latitude": latitude})
         self.assertIs(response.status_code, 200)
         self.assertIs(type(response), JsonResponse)
-        self.assertJSONNotEqual(str(response.content, encoding='utf8'), topDefault)
+        self.assertJSONNotEqual(str(response.content, encoding='utf8'), top_default)
         json = response.json()['peopleLikeYou']
         actualLongitude = json[0]['longitude']
         self.assertEqual(isclose(longitude, actualLongitude),True,'asserted longitudes would match')
@@ -76,7 +76,7 @@ class LikeMeIndexTests(TestCase):
         response = self.client.get(reverse('likeme:index'), {"monthly income": income})
         self.assertIs(response.status_code, 200)
         self.assertIs(type(response), JsonResponse)
-        self.assertJSONNotEqual(str(response.content, encoding='utf8'), topDefault)
+        self.assertJSONNotEqual(str(response.content, encoding='utf8'), top_default)
         json = response.json()['peopleLikeYou']
         actualIncome = json[0]['monthly income']
         self.assertEqual(income, actualIncome,'asserted incomes would match')
@@ -86,7 +86,7 @@ class LikeMeIndexTests(TestCase):
         response = self.client.get(reverse('likeme:index'), {"monthlyIncome": income})
         self.assertIs(response.status_code, 200)
         self.assertIs(type(response), JsonResponse)
-        self.assertJSONNotEqual(str(response.content, encoding='utf8'), topDefault)
+        self.assertJSONNotEqual(str(response.content, encoding='utf8'), top_default)
         json = response.json()['peopleLikeYou']
         actualIncome = json[0]['monthly income']
         self.assertEqual(income, actualIncome,'asserted incomes would match')
@@ -95,7 +95,7 @@ class LikeMeIndexTests(TestCase):
         response = self.client.get(reverse('likeme:index'), {"experienced": True})
         self.assertIs(response.status_code, 200)
         self.assertIs(type(response), JsonResponse)
-        self.assertJSONNotEqual(str(response.content, encoding='utf8'), topDefault)
+        self.assertJSONNotEqual(str(response.content, encoding='utf8'), top_default)
         json = response.json()['peopleLikeYou']
         actualExp = json[0]['experienced']
         self.assertEqual(True, actualExp)
@@ -104,7 +104,7 @@ class LikeMeIndexTests(TestCase):
         response = self.client.get(reverse('likeme:index'), {"experienced": False})
         self.assertIs(response.status_code, 200)
         self.assertIs(type(response), JsonResponse)
-        self.assertJSONNotEqual(str(response.content, encoding='utf8'), topDefault)
+        self.assertJSONNotEqual(str(response.content, encoding='utf8'), top_default)
         json = response.json()['peopleLikeYou']
         actualExp = json[0]['experienced']
         self.assertEqual(False, actualExp)
@@ -120,7 +120,7 @@ class LikeMeIndexTests(TestCase):
            'longitude': longitude
         }
         response = self.client.get(reverse('likeme:index'), query)
-        self.assertJSONNotEqual(str(response.content, encoding='utf8'), topDefault)
+        self.assertJSONNotEqual(str(response.content, encoding='utf8'), top_default)
         json = response.json()['peopleLikeYou']
         actualLongitude = json[0]['longitude']
         self.assertEqual(isclose(longitude, actualLongitude),True,'asserted longitudes would match')
@@ -142,7 +142,7 @@ class LikeMeIndexTests(TestCase):
            'income': income
         }
         response = self.client.get(reverse('likeme:index'), query)
-        self.assertJSONNotEqual(str(response.content, encoding='utf8'), topDefault)
+        self.assertJSONNotEqual(str(response.content, encoding='utf8'), top_default)
         json = response.json()['peopleLikeYou']
         actualLongitude = json[0]['longitude']
         self.assertEqual(isclose(longitude, actualLongitude),True,'asserted longitudes would match')
@@ -168,7 +168,7 @@ class LikeMeIndexTests(TestCase):
            'income': income
         }
         response = self.client.get(reverse('likeme:index'), query)
-        self.assertJSONNotEqual(str(response.content, encoding='utf8'), topDefault)
+        self.assertJSONNotEqual(str(response.content, encoding='utf8'), top_default)
         json = response.json()['peopleLikeYou']
         actualLongitude = json[0]['longitude']
         self.assertEqual(isclose(longitude, actualLongitude),True,'asserted longitudes would match')
@@ -198,7 +198,7 @@ class LikeMeIndexTests(TestCase):
            'experienced': experienced
         }
         response = self.client.get(reverse('likeme:index'), query)
-        self.assertJSONNotEqual(str(response.content, encoding='utf8'), topDefault)
+        self.assertJSONNotEqual(str(response.content, encoding='utf8'), top_default)
         json = response.json()['peopleLikeYou']
         actualLongitude = json[0]['longitude']
         self.assertEqual(isclose(longitude, actualLongitude),True,'asserted longitudes would match')
@@ -232,7 +232,7 @@ class LikeMeIndexTests(TestCase):
            'more': 'fields'
         }
         response = self.client.get(reverse('likeme:index'), query)
-        self.assertJSONNotEqual(str(response.content, encoding='utf8'), topDefault)
+        self.assertJSONNotEqual(str(response.content, encoding='utf8'), top_default)
         json = response.json()['peopleLikeYou']
         actualLongitude = json[0]['longitude']
         self.assertEqual(isclose(longitude, actualLongitude),True,'asserted longitudes would match')
