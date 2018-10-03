@@ -33,4 +33,5 @@ def by_distance(data_frame, location_type, value):
 
 def top_ten(data_frame):
     "pagination query"
-    return data_frame.sort_values(by='score', ascending=False).head(10).to_dict('records')
+    filtered = data_frame[data_frame.score >= 0.4]
+    return filtered.sort_values(by='score', ascending=False).head(10).to_dict('records')
