@@ -1,8 +1,11 @@
+import re
 import numpy as np
 import pandas as pd
 from numpy.linalg import norm
 from similarity.normalized_levenshtein import NormalizedLevenshtein
 normalized_levenshtein = NormalizedLevenshtein()
+
+isTrue = re.compile('true', re.IGNORECASE)
 
 def byName(df, name):
     "produces a normalized distance score between 0 and 1"
@@ -12,10 +15,10 @@ def byName(df, name):
     return name_scores
 
 def byExperience(df, experience):
+    paramsExper = re.match(isTrue, experience) != None
     "converts the experienced column into a score of 0 or 1"
     def makeScore(_exp):
-        "pandas bool does not match with django bool"
-        result = str(experience) == str(_exp)
+        result = paramsExper == _exp
         return 1 if result else 0
     exp_score = df['experienced'].map(makeScore)
     return exp_score 
