@@ -46,8 +46,9 @@ def index(request):
             df['score'] += new_scores
             score_count += 1
 
-        if 'monthly income' in params:
-            new_scores = byDistance(df, 'monthly income', int(params['monthly income']))
+        if any(param in params for param in ('monthly income', 'monthlyIncome')):
+            income = params['monthlyIncome'] if 'monthlyIncome' in params else params['monthly income']
+            new_scores = byDistance(df, 'monthly income', int(income))
             df['score'] += new_scores
             score_count += 1
 

@@ -81,6 +81,16 @@ class LikeMeIndexTests(TestCase):
         actualIncome = json[0]['monthly income']
         self.assertEqual(income, actualIncome,'asserted incomes would match')
 
+    def test_should_query_by_monthlyIncome(self):
+        income = 5132
+        response = self.client.get(reverse('likeme:index'), {"monthlyIncome": income})
+        self.assertIs(response.status_code, 200)
+        self.assertIs(type(response), JsonResponse)
+        self.assertJSONNotEqual(str(response.content, encoding='utf8'), topDefault)
+        json = response.json()['peopleLikeYou']
+        actualIncome = json[0]['monthly income']
+        self.assertEqual(income, actualIncome,'asserted incomes would match')
+
     def test_should_query_by_experienced_True(self):
         response = self.client.get(reverse('likeme:index'), {"experienced": True})
         self.assertIs(response.status_code, 200)
