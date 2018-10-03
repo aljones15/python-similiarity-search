@@ -25,7 +25,7 @@ SECRET_KEY = 's$yvr7i+!rx7riq7%x#weaza11b&$3b0&m6yrn+s07^lws5$6m'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['lit-tor-51708.herokuapp.com']
+ALLOWED_HOSTS = ['localhost', 'lit-tor-51708.herokuapp.com']
 
 
 # Application definition
@@ -54,7 +54,7 @@ ROOT_URLCONF = 'people.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
