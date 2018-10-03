@@ -9,7 +9,7 @@ def byName(df, name):
     def makeScore(_name):
         return 1 - normalized_levenshtein.distance(_name, name)
     name_scores = df['name'].map(makeScore)
-    df['score'] += name_scores
+    return name_scores
 
 def byExperience(df, experience):
     "converts the experienced column into a score of 0 or 1"
@@ -17,22 +17,15 @@ def byExperience(df, experience):
         "pandas bool does not match with django bool"
         result = str(experience) == str(_exp)
         return 1 if result else 0
-    exp_score = df['experienced'].map(makeScore) 
-    df['score'] += exp_score
+    exp_score = df['experienced'].map(makeScore)
+    return exp_score 
 
-def byEudlidianDistance(df, latitude, longitude):
-   "to normalize for all distances 1 - distance / max distance"
-   searchLocation = pd.Series({'latitude': float(latitude), 'longitude': float(longitude)})
-   # distances =np.linalg.norm()
-   # np.linalg.norm
-   return df 
-
-def bySingleLocation(df, locationType, value):
-    distances = np.square(df[locationType] - float(value))
+def byDistance(df, locationType, value):
+    "to normalize for all distances 1 - distance / max distance"
+    distances = np.square(df[locationType] - value)
     maxDistance = np.max(distances)
     normalized = 1 - distances / maxDistance
-    print(normalized)
-    df['score'] += normalized
+    return normalized
 
 def topTen(df):
     "pagination query"

@@ -1,3 +1,4 @@
+from math import isclose
 from django.test import TestCase
 from django.urls import reverse
 from django.http import JsonResponse
@@ -47,14 +48,20 @@ class LikeMeIndexTests(TestCase):
         self.assertJSONNotEqual(str(response.content, encoding='utf8'), topDefault)
         json = response.json()['peopleLikeYou']
         actualLongitude = json[0]['longitude']
-        self.assertEqual(longitude, actualLongitude) 
-
+        self.assertEqual(longitude, actualLongitude)
 
     def test_should_query_by_location(self):
-        response = self.client.get(reverse('likeme:index'), {"longitude": 40.71667, "latitude": 40.71667})
+        latitude = 44.8501354
+        longitude = -0.5702805
+        response = self.client.get(reverse('likeme:index'), {"longitude": longitude, "latitude": latitude})
         self.assertIs(response.status_code, 200)
         self.assertIs(type(response), JsonResponse)
         self.assertJSONNotEqual(str(response.content, encoding='utf8'), topDefault)
+        json = response.json()['peopleLikeYou']
+        actualLongitude = json[0]['longitude']
+        self.assertEqual(isclose(longitude, actualLongitude),True,'asserted longitudes would match')
+        actualLatitude = json[0]['latitude']
+        self.assertEqual(latitude, actualLatitude, 'asserted that latitudes would match') 
 
     def test_should_query_by_monthly_income(self):
         response = self.client.get(reverse('likeme:index'), {"monthly income": 5132})
