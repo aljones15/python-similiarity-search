@@ -1,3 +1,4 @@
+![](_v_images/_1538568940_876791124.png)
 # Instructions
 - implemented this in python 3
 - install [pipenv](https://github.com/pypa/pipenv) first
@@ -9,12 +10,10 @@ pipenv install
 
 **Start**
 ```
-cd people
 pipenv run python manage.py runserver 8085
 ```
 **Test**
 ```
-cd people
 pipenv run python manage.py test
 ```
 
