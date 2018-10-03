@@ -28,7 +28,7 @@ class LikeMeIndexTests(TestCase):
         response = self.client.get(reverse('likeme:index'), {"age": 30})
         self.assertIs(response.status_code, 200)
         self.assertIs(type(response), JsonResponse)
-        self.assertJSONEqual(str(response.content, encoding='utf8'), topDefault)
+        self.assertJSONNotEqual(str(response.content, encoding='utf8'), topDefault)
 
     def test_should_query_by_latitude(self):
         latitude = 40.71667
@@ -67,7 +67,7 @@ class LikeMeIndexTests(TestCase):
         response = self.client.get(reverse('likeme:index'), {"monthly income": 5132})
         self.assertIs(response.status_code, 200)
         self.assertIs(type(response), JsonResponse)
-        self.assertJSONEqual(str(response.content, encoding='utf8'), topDefault)
+        self.assertJSONNotEqual(str(response.content, encoding='utf8'), topDefault)
 
     def test_should_query_by_experienced_True(self):
         response = self.client.get(reverse('likeme:index'), {"experienced": True})

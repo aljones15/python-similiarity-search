@@ -41,6 +41,16 @@ def index(request):
             df['score'] += new_scores
             score_count += 1
 
+        if 'age' in params:
+            new_scores = byDistance(df, 'age', int(params['age']))
+            df['score'] += new_scores
+            score_count += 1
+
+        if 'monthly income' in params:
+            new_scores = byDistance(df, 'monthly income', int(params['monthly income']))
+            df['score'] += new_scores
+            score_count += 1
+
         if score_count > 0:
             df['score'] = df['score'] / score_count
             
