@@ -113,4 +113,27 @@ class LikeMeIndexTests(TestCase):
         actualAge = json[0]['age']
         self.assertEqual(age, actualAge) 
 
+    def test_should_query_on_four_fields(self):
+        # Glynis,70,27.756647,118.035309,14424,true
+        age = 70
+        latitude = 27.756647
+        longitude = 118.035309
+        income = 14424
+        query = {
+           'age': age,
+           'latitude': latitude,
+           'longitude': longitude,
+           'income': income
+        }
+        response = self.client.get(reverse('likeme:index'), query)
+        self.assertJSONNotEqual(str(response.content, encoding='utf8'), topDefault)
+        json = response.json()['peopleLikeYou']
+        actualLongitude = json[0]['longitude']
+        self.assertEqual(isclose(longitude, actualLongitude),True,'asserted longitudes would match')
+        actualLatitude = json[0]['latitude']
+        self.assertEqual(isclose(latitude, actualLatitude),True, 'asserted that latitudes would match') 
+        actualAge = json[0]['age']
+        self.assertEqual(age, actualAge) 
+        actualIncome = json[0]['monthly income']
+        self.assertEqual(income, actualIncome) 
 
